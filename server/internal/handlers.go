@@ -8,10 +8,6 @@ import (
 
 type Handler struct{}
 
-type ErrorResponse struct {
-	Error string `json:"error"`
-}
-
 func NewHandler() Handler {
 	return Handler{}
 }
@@ -34,74 +30,47 @@ func (h Handler) FizzBuzz(w http.ResponseWriter, r *http.Request) {
 
 	// Validate required parameters
 	if int1Str == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		if err := json.NewEncoder(w).Encode(ErrorResponse{Error: "Missing required parameter: int1"}); err != nil {
-			http.Error(w, "Error encoding JSON response", http.StatusInternalServerError)
-		}
+		http.Error(w, "Missing required parameter: int1", http.StatusBadRequest)
 		return
 	}
 	if int2Str == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		if err := json.NewEncoder(w).Encode(ErrorResponse{Error: "Missing required parameter: int2"}); err != nil {
-			http.Error(w, "Error encoding JSON response", http.StatusInternalServerError)
-		}
+		http.Error(w, "Missing required parameter: int2", http.StatusBadRequest)
 		return
 	}
 	if limitStr == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		if err := json.NewEncoder(w).Encode(ErrorResponse{Error: "Missing required parameter: limit"}); err != nil {
-			http.Error(w, "Error encoding JSON response", http.StatusInternalServerError)
-		}
+		http.Error(w, "Missing required parameter: limit", http.StatusBadRequest)
 		return
 	}
 	if str1 == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		if err := json.NewEncoder(w).Encode(ErrorResponse{Error: "Missing required parameter: str1"}); err != nil {
-			http.Error(w, "Error encoding JSON response", http.StatusInternalServerError)
-		}
+		http.Error(w, "Missing required parameter: str1", http.StatusBadRequest)
 		return
 	}
 	if str2 == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		if err := json.NewEncoder(w).Encode(ErrorResponse{Error: "Missing required parameter: str2"}); err != nil {
-			http.Error(w, "Error encoding JSON response", http.StatusInternalServerError)
-		}
+		http.Error(w, "Missing required parameter: str2", http.StatusBadRequest)
 		return
 	}
 
 	// Parse integers
 	int1, err := strconv.Atoi(int1Str)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		if err := json.NewEncoder(w).Encode(ErrorResponse{Error: "int1 must be a valid integer"}); err != nil {
-			http.Error(w, "Error encoding JSON response", http.StatusInternalServerError)
-		}
+		http.Error(w, "int1 must be a valid integer", http.StatusBadRequest)
 		return
 	}
 	int2, err := strconv.Atoi(int2Str)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		if err := json.NewEncoder(w).Encode(ErrorResponse{Error: "int2 must be a valid integer"}); err != nil {
-			http.Error(w, "Error encoding JSON response", http.StatusInternalServerError)
-		}
+		http.Error(w, "int2 must be a valid integer", http.StatusBadRequest)
 		return
 	}
 
 	limit, err := strconv.Atoi(limitStr)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		if err := json.NewEncoder(w).Encode(ErrorResponse{Error: "limit must be a valid integer"}); err != nil {
-			http.Error(w, "Error encoding JSON response", http.StatusInternalServerError)
-		}
+		http.Error(w, "limit must be a valid integer", http.StatusBadRequest)
 		return
 	}
 
 	result, err := GenerateFizzBuzz(int1, int2, limit, str1, str2)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		if err := json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()}); err != nil {
-			http.Error(w, "Error encoding JSON response", http.StatusInternalServerError)
-		}
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
