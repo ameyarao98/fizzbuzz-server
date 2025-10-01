@@ -1,8 +1,8 @@
 type: http_request
 model: http_request
-id: rq_CypuPBjeuv
-createdAt: 2025-10-01T12:09:35.740742535
-updatedAt: 2025-10-01T17:04:08.270523063
+id: rq_ZByovaWoyq
+createdAt: 2025-10-01T16:58:40.857278418
+updatedAt: 2025-10-01T16:59:03.183651584
 workspaceId: wk_ijQV68mSC6
 folderId: null
 authentication: {}
@@ -12,13 +12,13 @@ bodyType: null
 description: ''
 headers: []
 method: GET
-name: FizzBuzz
-sortPriority: -1759320384471.0
-url: ${[ HOST ]}/fizzbuzz
+name: Statistics
+sortPriority: -1759320384470.999
+url: ${[ HOST ]}/statistics
 urlParameters:
 - enabled: true
   name: int1
-  value: '1'
+  value: '3'
   id: ud7TbMz36F
 - enabled: true
   name: int2
@@ -39,4 +39,4 @@ urlParameters:
 - enabled: true
   name: ''
   value: ''
-  id: YTpFyh7CQM
+  id: EpWRIjiiFk

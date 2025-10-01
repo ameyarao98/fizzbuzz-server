@@ -1,25 +1,15 @@
-package internal
+package handler
 
 import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+
+	"github.com/ameyarao98/fizzbuzz-server/server/internal/fizzbuzz"
+	"github.com/ameyarao98/fizzbuzz-server/server/internal/rdb"
 )
 
-type Handler struct{}
-
-func NewHandler() Handler {
-	return Handler{}
-}
-
-func (h Handler) Health(w http.ResponseWriter, r *http.Request) {
-	if _, err := w.Write([]byte("fizz buzz")); err != nil {
-		http.Error(w, "Error writing response", http.StatusInternalServerError)
-	}
-}
-
 func (h Handler) FizzBuzz(w http.ResponseWriter, r *http.Request) {
-
 	query := r.URL.Query()
 
 	int1Str := query.Get("int1")
@@ -50,32 +40,51 @@ func (h Handler) FizzBuzz(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Parse integers
-	int1, err := strconv.Atoi(int1Str)
+	int1Val, err := strconv.ParseInt(int1Str, 10, 64)
 	if err != nil {
 		http.Error(w, "int1 must be a valid integer", http.StatusBadRequest)
 		return
 	}
-	int2, err := strconv.Atoi(int2Str)
+	if int1Val < 0 {
+		http.Error(w, "int1 must be a positive integer", http.StatusBadRequest)
+		return
+	}
+	int1 := uint(int1Val)
+
+	int2Val, err := strconv.ParseInt(int2Str, 10, 64)
 	if err != nil {
 		http.Error(w, "int2 must be a valid integer", http.StatusBadRequest)
 		return
 	}
+	if int2Val < 0 {
+		http.Error(w, "int2 must be a positive integer", http.StatusBadRequest)
+		return
+	}
+	int2 := uint(int2Val)
 
-	limit, err := strconv.Atoi(limitStr)
+	limitVal, err := strconv.ParseInt(limitStr, 10, 64)
 	if err != nil {
 		http.Error(w, "limit must be a valid integer", http.StatusBadRequest)
 		return
 	}
-
-	result, err := GenerateFizzBuzz(int1, int2, limit, str1, str2)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	if limitVal < 0 {
+		http.Error(w, "limit must be a positive integer", http.StatusBadRequest)
 		return
 	}
+	limit := uint(limitVal)
 
+	result := fizzbuzz.GenerateFizzBuzz(int1, int2, limit, str1, str2)
+
+	key := rdb.GenerateRedisKey(int1, int2, limit, str1, str2)
+	err = rdb.IncreaseCounter(h.rdb, key)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(result); err != nil {
 		http.Error(w, "Error encoding JSON response", http.StatusInternalServerError)
+		return
 	}
+
 }
