@@ -1,0 +1,14 @@
+type: workspace
+model: workspace
+id: wk_ijQV68mSC6
+createdAt: 2025-10-01T12:06:09.570803655
+updatedAt: 2025-10-01T12:06:09.570805018
+authentication: {}
+authenticationType: null
+description: ''
+headers: []
+name: FizzBuzz
+encryptionKeyChallenge: null
+settingValidateCertificates: true
+settingFollowRedirects: true
+settingRequestTimeout: 0

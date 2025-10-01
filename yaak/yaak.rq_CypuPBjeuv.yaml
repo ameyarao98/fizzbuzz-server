@@ -1,0 +1,42 @@
+type: http_request
+model: http_request
+id: rq_CypuPBjeuv
+createdAt: 2025-10-01T12:09:35.740742535
+updatedAt: 2025-10-01T12:12:12.852377552
+workspaceId: wk_ijQV68mSC6
+folderId: null
+authentication: {}
+authenticationType: null
+body: {}
+bodyType: null
+description: ''
+headers: []
+method: GET
+name: FizzBuzz
+sortPriority: -1759320384471.0
+url: ${[ HOST ]}/fizzbuzz
+urlParameters:
+- enabled: true
+  name: int1
+  value: '3'
+  id: ud7TbMz36F
+- enabled: true
+  name: int2
+  value: '5'
+  id: kayh4BtTf0
+- enabled: true
+  name: limit
+  value: '100'
+  id: ZWFyIjJNYx
+- enabled: true
+  name: str1
+  value: fizz
+  id: g2aHQXTsQe
+- enabled: true
+  name: str2
+  value: buzz
+  id: AAvJFQ8Jwf
+- enabled: true
+  name: ''
+  value: ''
+  id: pdiwDRwKDW
