@@ -40,7 +40,7 @@ func (h Handler) FizzBuzz(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	int1Val, err := strconv.ParseInt(int1Str, 10, 64)
+	int1Val, err := strconv.Atoi(int1Str)
 	if err != nil {
 		http.Error(w, "int1 must be a valid integer", http.StatusBadRequest)
 		return
@@ -51,7 +51,7 @@ func (h Handler) FizzBuzz(w http.ResponseWriter, r *http.Request) {
 	}
 	int1 := uint(int1Val)
 
-	int2Val, err := strconv.ParseInt(int2Str, 10, 64)
+	int2Val, err := strconv.Atoi(int2Str)
 	if err != nil {
 		http.Error(w, "int2 must be a valid integer", http.StatusBadRequest)
 		return
@@ -62,7 +62,7 @@ func (h Handler) FizzBuzz(w http.ResponseWriter, r *http.Request) {
 	}
 	int2 := uint(int2Val)
 
-	limitVal, err := strconv.ParseInt(limitStr, 10, 64)
+	limitVal, err := strconv.Atoi(limitStr)
 	if err != nil {
 		http.Error(w, "limit must be a valid integer", http.StatusBadRequest)
 		return
