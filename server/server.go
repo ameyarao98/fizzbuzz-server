@@ -5,16 +5,22 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
-	"github.com/ameyarao98/fizzbuzz-server/server/internal"
-	"github.com/ameyarao98/fizzbuzz-server/server/internal/handler"
+	"github.com/ameyarao98/fizzbuzz-server/server/internal/api"
 	"github.com/redis/go-redis/v9"
 )
 
 func main() {
+	redisAddr := os.Getenv("REDIS_DSN")
+	redisDB, err := strconv.Atoi(os.Getenv("REDIS_DB"))
+	if err != nil {
+		log.Fatalf("Invalid REDIS_DB value: %v", err)
+	}
 	rdb := redis.NewClient(
 		&redis.Options{
-			Addr: os.Getenv("REDIS_DSN"),
+			Addr: redisAddr,
+			DB:   redisDB,
 		})
 	defer func(rdb *redis.Client) {
 		if err := rdb.Close(); err != nil {
@@ -22,8 +28,8 @@ func main() {
 		}
 	}(rdb)
 
-	handler := handler.NewHandler(rdb)
-	router := internal.NewRouter(handler)
+	handler := api.NewHandler(rdb)
+	router := api.NewRouter(handler)
 
 	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")

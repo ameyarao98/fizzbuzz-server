@@ -1,14 +1,14 @@
-package handler
+package api
 
 import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/ameyarao98/fizzbuzz-server/server/internal/rdb"
+	"github.com/ameyarao98/fizzbuzz-server/server/internal/redis"
 )
 
 func (h Handler) Statistics(w http.ResponseWriter, r *http.Request) {
-	key, count, err := rdb.GetHighestCount(h.rdb)
+	key, count, err := redis.GetHighestCount(r.Context(), h.rdb)
 	if err != nil {
 		http.Error(w, "Error getting statistics", http.StatusInternalServerError)
 		return

@@ -1,4 +1,4 @@
-package handler
+package api
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/ameyarao98/fizzbuzz-server/server/internal/fizzbuzz"
-	"github.com/ameyarao98/fizzbuzz-server/server/internal/rdb"
+	"github.com/ameyarao98/fizzbuzz-server/server/internal/redis"
 )
 
 func (h Handler) FizzBuzz(w http.ResponseWriter, r *http.Request) {
@@ -75,8 +75,8 @@ func (h Handler) FizzBuzz(w http.ResponseWriter, r *http.Request) {
 
 	result := fizzbuzz.GenerateFizzBuzz(int1, int2, limit, str1, str2)
 
-	key := rdb.GenerateRedisKey(int1, int2, limit, str1, str2)
-	err = rdb.IncreaseCounter(h.rdb, key)
+	key := redis.GenerateRedisKey(int1, int2, limit, str1, str2)
+	err = redis.IncreaseCounter(r.Context(), h.rdb, key)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
