@@ -3,6 +3,7 @@ package testutils
 import (
 	"context"
 	"os"
+	"strconv"
 	"testing"
 
 	"github.com/redis/go-redis/v9"
@@ -10,9 +11,12 @@ import (
 )
 
 func SetupRedis(t *testing.T) (*redis.Client, func()) {
+	redisAddr := os.Getenv("REDIS_DSN")
+	redisDB, err := strconv.Atoi(os.Getenv("REDIS_DB"))
+	require.NoError(t, err, "Invalid REDIS_DB value")
 	rdb := redis.NewClient(&redis.Options{
-		Addr: os.Getenv("REDIS_DSN"),
-		DB:   1,
+		Addr: redisAddr,
+		DB:   redisDB,
 	})
 
 	cleanup := func() {

@@ -24,7 +24,7 @@ func main() {
 		})
 	defer func(rdb *redis.Client) {
 		if err := rdb.Close(); err != nil {
-			log.Printf("Warning: %v", err)
+			log.Print(err)
 		}
 	}(rdb)
 
