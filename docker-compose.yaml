@@ -8,8 +8,8 @@ services:
       - redis:/data
     environment:
       - REDIS_REPLICATION_MODE=master
-  server:
-    build: .
+  go:
+    build: ./go
     ports:
       - 8000:8000
     environment:

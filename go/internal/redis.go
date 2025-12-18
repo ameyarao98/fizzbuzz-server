@@ -1,4 +1,4 @@
-package redis
+package internal
 
 import (
 	"context"
@@ -6,6 +6,12 @@ import (
 
 	"github.com/redis/go-redis/v9"
 )
+
+const RequestsKey = "requests"
+
+func GenerateRedisKey(int1, int2, limit uint, str1, str2 string) string {
+	return fmt.Sprintf("%d:%d:%d:%s:%s", int1, int2, limit, str1, str2)
+}
 
 func IncreaseCounter(ctx context.Context, rdb *redis.Client, key string) error {
 	if err := rdb.ZIncrBy(ctx, RequestsKey, 1, key).Err(); err != nil {

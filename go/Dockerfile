@@ -6,5 +6,4 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN go build -o fizzbuzz-server ./server
-CMD ["./fizzbuzz-server"]
+CMD ["go", "run", "server.go"]

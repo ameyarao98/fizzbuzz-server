@@ -1,8 +1,6 @@
-package api
+package internal
 
-import (
-	"net/http"
-)
+import "net/http"
 
 const (
 	HealthEndpoint     = "/health"

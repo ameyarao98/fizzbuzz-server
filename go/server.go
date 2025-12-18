@@ -7,7 +7,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/ameyarao98/fizzbuzz-server/server/internal/api"
+	"github.com/ameyarao98/fizzbuzz-server/go/internal"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -28,8 +28,8 @@ func main() {
 		}
 	}(rdb)
 
-	handler := api.NewHandler(rdb)
-	router := api.NewRouter(handler)
+	handler := internal.NewHandler(rdb)
+	router := internal.NewRouter(handler)
 
 	host := os.Getenv("HOST")
 	port := os.Getenv("PORT")

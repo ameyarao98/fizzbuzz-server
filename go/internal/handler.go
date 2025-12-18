@@ -1,13 +1,30 @@
-package api
+package internal
 
 import (
 	"encoding/json"
 	"net/http"
 	"strconv"
 
-	"github.com/ameyarao98/fizzbuzz-server/server/internal/fizzbuzz"
-	"github.com/ameyarao98/fizzbuzz-server/server/internal/redis"
+	"github.com/redis/go-redis/v9"
 )
+
+type Handler struct {
+	rdb *redis.Client
+}
+
+func NewHandler(rdb *redis.Client) Handler {
+	return Handler{
+		rdb: rdb,
+	}
+}
+
+const healthResponse = "fizz buzz"
+
+func (h Handler) Health(w http.ResponseWriter, r *http.Request) {
+	if _, err := w.Write([]byte(healthResponse)); err != nil {
+		http.Error(w, "Error writing response", http.StatusInternalServerError)
+	}
+}
 
 func (h Handler) FizzBuzz(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
@@ -45,7 +62,7 @@ func (h Handler) FizzBuzz(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "int1 must be a valid integer", http.StatusBadRequest)
 		return
 	}
-	if int1Val < 0 {
+	if int1Val <= 0 {
 		http.Error(w, "int1 must be a positive integer", http.StatusBadRequest)
 		return
 	}
@@ -56,7 +73,7 @@ func (h Handler) FizzBuzz(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "int2 must be a valid integer", http.StatusBadRequest)
 		return
 	}
-	if int2Val < 0 {
+	if int2Val <= 0 {
 		http.Error(w, "int2 must be a positive integer", http.StatusBadRequest)
 		return
 	}
@@ -73,10 +90,10 @@ func (h Handler) FizzBuzz(w http.ResponseWriter, r *http.Request) {
 	}
 	limit := uint(limitVal)
 
-	result := fizzbuzz.GenerateFizzBuzz(int1, int2, limit, str1, str2)
+	result := GenerateFizzBuzz(int1, int2, limit, str1, str2)
 
-	key := redis.GenerateRedisKey(int1, int2, limit, str1, str2)
-	err = redis.IncreaseCounter(r.Context(), h.rdb, key)
+	key := GenerateRedisKey(int1, int2, limit, str1, str2)
+	err = IncreaseCounter(r.Context(), h.rdb, key)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -87,4 +104,23 @@ func (h Handler) FizzBuzz(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+}
+func (h Handler) Statistics(w http.ResponseWriter, r *http.Request) {
+	key, count, err := GetHighestCount(r.Context(), h.rdb)
+	if err != nil {
+		http.Error(w, "Error getting statistics", http.StatusInternalServerError)
+		return
+	}
+	data := map[string]float64{key: count}
+
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		http.Error(w, "Error marshaling response", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if _, err := w.Write(jsonData); err != nil {
+		http.Error(w, "Error writing response", http.StatusInternalServerError)
+	}
 }
