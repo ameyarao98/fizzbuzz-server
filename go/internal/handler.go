@@ -18,7 +18,7 @@ func NewHandler(rdb *redis.Client) Handler {
 	}
 }
 
-const healthResponse = "fizz buzz"
+const healthResponse = "fizz buzz: go"
 
 func (h Handler) Health(w http.ResponseWriter, r *http.Request) {
 	if _, err := w.Write([]byte(healthResponse)); err != nil {

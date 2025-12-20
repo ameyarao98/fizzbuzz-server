@@ -17,7 +17,18 @@ services:
       - PORT=8000
       - REDIS_DSN=redis:6379
       - REDIS_DB=0
-      - REDIS_TEST_DB=1
+    depends_on:
+      - redis
+    restart: unless-stopped
+  python:
+    build: ./python
+    ports:
+      - 8001:8001
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8001
+      - REDIS_DSN=redis:6379
+      - REDIS_DB=0
     depends_on:
       - redis
     restart: unless-stopped
