@@ -1,6 +1,6 @@
 from litestar import Router
 
-from .handler import get_fizzbuzz, get_health
+from .handler import get_fizzbuzz, get_health, get_statistics
 
 api_router = Router(
     path="",
@@ -12,6 +12,10 @@ api_router = Router(
         Router(
             path="/fizzbuzz",
             route_handlers=(get_fizzbuzz,),
+        ),
+        Router(
+            path="/statistics",
+            route_handlers=(get_statistics,),
         ),
     ),
 )

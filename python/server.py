@@ -2,10 +2,15 @@ import os
 
 import uvicorn
 from litestar import Litestar
+from litestar.di import Provide
 
+from internal.redis import init_redis
 from internal.router import api_router
 
-app = Litestar(route_handlers=[api_router])
+app = Litestar(
+    route_handlers=[api_router],
+    dependencies={"redis_client": Provide(init_redis)},
+)
 
 if __name__ == "__main__":
     uvicorn.run(
