@@ -7,7 +7,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/ameyarao98/fizzbuzz-server/go/internal"
+	"github.com/ameyarao98/fizzbuzz-server/go/server/internal"
 	"github.com/redis/go-redis/v9"
 )
 
